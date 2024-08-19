@@ -18,6 +18,27 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+# Adding the sidebar for selecting the repo_id
+st.sidebar.title("Model Selection")
+repo_id = st.sidebar.selectbox(
+    "Select the HuggingFace model:",
+    options=[
+        "mistralai/Mixtral-8x7B-Instruct-v0.1",
+        "mistralai/Mistral-7B-Instruct-v0.2",
+        "mistralai/Mistral-7B-Instruct-v0.3",
+        "microsoft/Phi-3-mini-4k-instruct",
+        "google/gemma-2-2b-it"
+    ],
+    index=0  # Default selection
+)
+
+n_retrieved_docs = st.sidebar.number_input(
+    "Number of documents to retrieve:",
+    min_value=1,
+    max_value=20,
+    value=5,  # Default value
+    step=1
+)
 
 from langchain_huggingface import HuggingFaceEndpoint
 from langchain_community.vectorstores import Chroma
@@ -29,12 +50,10 @@ load_dotenv()
 
 from prompts import query_extract_prompt, dfa_rag_prompt
 
-repo_id = "mistralai/Mixtral-8x7B-Instruct-v0.1"
 llm = HuggingFaceEndpoint(repo_id=repo_id, temperature=0.1)
 
 # RETRIEVER 
 CHROMA_PATH = "chroma"
-n_retrieved_docs = 5
 
 embedding_function = OpenAIEmbeddings()
 db = Chroma(persist_directory=CHROMA_PATH, embedding_function=embedding_function)
