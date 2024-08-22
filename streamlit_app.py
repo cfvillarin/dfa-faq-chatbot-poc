@@ -4,10 +4,25 @@ sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 import streamlit as st
 
-st.title("DFA Chatbot")
-st.write(
-    "This chatbot answers questions based on FAQs found [here](https://consular.dfa.gov.ph/faqs-menu?). "
-)
+# Create columns for the title and logo
+col1, col2 = st.columns([3.5, 1])  # Adjust the ratio as needed
+
+# Title in the first column
+with col1:
+    st.title("📄 DFA Q&A")
+    st.write(
+        "This app answers questions based on FAQs found [here](https://consular.dfa.gov.ph/faqs-menu?). "
+    )
+# Logo and "Developed by CAIR" text in the second column
+with col2:
+    st.image("images/CAIR_cropped.png", use_column_width=True)
+    st.markdown(
+        """
+        <div style="text-align: right; margin-top: -10px;">
+            Developed by CAIR
+        </div>
+        """, 
+        unsafe_allow_html=True)
 
 # Initialize chat history
 if "messages" not in st.session_state:
